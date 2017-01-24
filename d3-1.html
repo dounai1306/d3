@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>元素选择和数据绑定</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">元素选择和数据绑定</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3">
+                <p>test</p>
+                <p>test1</p>
+                <p>test2</p>
+            </div>
+        </div>
+        <div class="panel-footer">
+            选择：<code>d3.select()</code> 和 <code>d3.selectAll()</code>
+            <br>
+            绑定：<code>datum()</code> 和 <code>d3.data()</code>
+            <br>
+            匿名函数：<code>function(d,i){}</code>d为数据，i为索引
+        </div>
+    </div>
+</div>
+
+<script>
+    var width = 400;
+    var height = 400;
+
+    var str = "china";
+    var p = d3.select("#d3").selectAll("p");
+
+    p.datum(str);
+
+    p.text(function (d, i) {
+        return "第" + i + "个元素绑定的数据是" + d
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title> D3.JS</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/d3/4.4.3/d3.js"></script>
+
+
+    <style>
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        .MyRect {
+            fill: #3498DB;
+        }
+
+        .MyText {
+            fill: white;
+            text-anchor: middle;
+        }
+
+        /* 力导向图 */
+        .node {
+            stroke: #000;
+            stroke-width: 1px;
+        }
+
+        .link {
+            stroke: #999;
+            stroke-width: 1px;
+        }
+
+        /* 树状图 */
+        .Tree-node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 1px;
+        }
+
+        .Tree-node {
+            font: 12px sans-serif;
+        }
+
+        .Tree-link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1px;
+        }
+        /* 大包图  */
+        .pack-node {
+            stroke-width: 1px;
+        }
+        #d3-10 circle {
+            fill: rgb(31, 119, 180);
+            fill-opacity: .25;
+            stroke: rgb(31, 119, 180);
+            stroke-width: 1px;
+        }
+
+        #d3-10 .leaf circle {
+            fill: #ff7f0e;
+            fill-opacity: 1;
+        }
+
+        #d3-10 text {
+            font: 10px sans-serif;
+            text-anchor: middle;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">元素绑定</div>
+                <div class="panel-body">
+                    <div id="d3-1">
+                        <p>test</p>
+
+                        <p>test1</p>
+
+                        <p>test2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">基础图表</div>
+                <div class="panel-body">
+                    <div id="d3-2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">坐标轴</div>
+                <div class="panel-body">
+                    <div id="d3-3"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">完整柱状图</div>
+                <div class="panel-body">
+                    <div id="d3-4"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">完整柱状图</div>
+                <div class="panel-body">
+                    <div id="d3-5"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">饼图</div>
+                <div class="panel-body">
+                    <div id="d3-6"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">力导向图</div>
+                <div class="panel-body">
+                    <div id="d3-7"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">弦图</div>
+                <div class="panel-body">
+                    <div id="d3-8"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">集群图&树状图</div>
+                <div class="panel-body">
+                    <div id="d3-9"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">打包图</div>
+                <div class="panel-body">
+                    <div id="d3-10"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">中国地图</div>
+                <div class="panel-body">
+                    <div id="d3-11"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var width = 400;
+    var height = 400;
+    //颜色比例尺
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    /////////////////////////元素绑定///////////////////////////////
+    function d3_1() {
+        var str = "china";
+        var p = d3.select("#d3-1").selectAll("p");
+        p.datum(str);
+        p.text(function (d, i) {
+            //d代表数据，i代表索引
+            return "第" + i + "个元素绑定的数据是" + d
+        });
+        //匿名函数d为数据，i为索引
+    }
+    d3_1();
+
+    /////////////////////////基础图表///////////////////////////////
+    function d3_2() {
+
+        var svg = d3.select("#d3-2")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+
+        var dataset = [250, 210, 170, 130, 90];
+        var rectHeight = 25;
+        //添加了与 dataset 数组的长度相同数量的矩形
+        svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", 0)
+                .attr("y", function (d, i) {
+                    return i * rectHeight;
+                })
+                .attr("width", function (d) {
+                    return d;
+                })
+                .attr("height", rectHeight - 2)
+                .attr("fill", "#3498DB")
+                .transition()
+                .duration(2000)
+                .attr("fill", "#E74C3C")
+    }
+    d3_2();
+
+
+    /////////////////////////坐标轴/////////////////////////////////////
+    function d3_3() {
+        //一定要注意range([x,y])不是range(x,y)
+        var svg = d3.select("#d3-3")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+
+        var dataset = [25, 21, 17, 13, 2]
+        //定义比例尺
+        var linear = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([0, height])
+        var rectHeight = 25;
+        svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", 0)
+                .attr("y", function (d, i) {
+                    return i * rectHeight
+                })
+                .attr("width", function (d) {
+                    return linear(d)
+                })
+                .attr("height", rectHeight - 2)
+                .attr("fill", "#3498DB")
+        //定义底部轴生成器
+        var axis = d3.axisBottom()
+                .scale(linear)
+                .ticks(5);
+        svg.append("g")
+                .attr("transform", "translate(0,130)")
+                .call(axis);
+
+    }
+    d3_3();
+
+    /////////////////////////完整柱状图/////////////////////////////
+    function d3_4() {
+        var svg = d3.select("#d3-4")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+        var padding = {left: 30, right: 30, top: 20, bottom: 20};
+        var dataset = [10, 20, 30, 40, 33, 24, 12, 5];
+
+
+        var xScale = d3.scaleBand()
+                .domain(d3.range(0, dataset.length))
+                .range([0, width - padding.left - padding.right])
+
+
+        var yScale = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([height - padding.top - padding.bottom, 0]);
+
+
+        var xAxis = d3.axisBottom()
+                .scale(xScale)
+        var yAxis = d3.axisLeft()
+                .scale(yScale)
+        //矩形之间的空白
+        var rectPadding = 4;
+
+        //添加矩形元素
+        var rects = svg.selectAll(".MyRect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("class", "MyRect")
+                .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+                .attr("x", function (d, i) {
+                    return xScale(i) + rectPadding / 2;
+                })
+                .attr("y", function (d) {
+                    return yScale(d);
+                })
+                .attr("width", xScale.bandwidth() - rectPadding)
+                .attr("height", function (d) {
+                    return height - padding.top - padding.bottom - yScale(d);
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this)
+                            .style("fill", "#E67E22");
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                            .transition()
+                            .duration(500)
+                            .style("fill", "#34495E")
+                })
+
+        // //添加文字元素
+        var texts = svg.selectAll(".MyText")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .attr("class", "MyText")
+                .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+                .attr("x", function (d, i) {
+                    return xScale(i) + rectPadding / 2;
+                })
+                .attr("y", function (d) {
+                    var min = yScale.domain()[0];
+                    return yScale(min);
+                })
+                .transition()
+                .delay(function (d, i) {
+                    return i * 200
+                })
+                .duration(2000)
+                .ease(d3.easeBounce)
+                .attr("y", function (d) {
+                    return yScale(d)
+                })
+                .attr("dx", function () {
+                    return (xScale.bandwidth() - rectPadding) / 2;
+                })
+                .attr("dy", function (d) {
+                    return 20;
+                })
+                .text(function (d) {
+                    return d;
+                });
+        //添加x轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")")
+                .call(xAxis);
+
+        //添加y轴
+        svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+                .call(yAxis);
+    }
+    d3_4();
+
+    //////////////////////过渡效果/////////////////////////////
+    function d3_5() {
+        var svg = d3.select("#d3-5")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+        var circle1 = svg.append("circle")
+                .attr("cx", 45)
+                .attr("cy", 45)
+                .attr("r", 45)
+                .style("fill", "#3498DB")
+        var circle2 = svg.append("circle")
+                .attr("cx", 45)
+                .attr("cy", 45)
+                .attr("r", 45)
+                .style("fill", "#3498DB")
+        var circle3 = svg.append("circle")
+                .attr("cx", 45)
+                .attr("cy", 45)
+                .attr("r", 45)
+                .style("fill", "#3498DB")
+
+        circle2.transition()
+                .duration(1500)
+                .attr("cx", 200)
+                .style("fill", "#2ECC71")
+        circle3.transition()
+                .duration(2000)
+                .ease(d3.easeBounce)
+                .attr("cx", 150)
+                .attr("cy", 150)
+                .style("fill", "#34495E")
+                .attr("r", 25)
+    }
+    d3_5();
+
+
+    function d3_6() {
+        /////////////////////////////饼图/////////////////////////////////////
+        var svg = d3.select("#d3-6")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+        var dataset = [
+            {"city": "shanghai", "population": 10},
+            {"city": "beijing", "population": 30},
+            {"city": "tianjin", "population": 20},
+            {"city": "shenzhen", "population": 45},
+            {"city": "guangzhou", "population": 130},
+        ];
+
+
+        var pie = d3.pie()
+                .value(function (d) {
+                    return d.population
+                })
+        (dataset);
+        //数据转换
+        var piedata = pie;
+        //弧生成器
+        var outerRadius = 100;
+        var innerRadius = 60;
+
+        //画曲线弧
+        var arc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius)
+        //	g用于把相关元素进行组合的容器元素
+        var arcs = svg.selectAll("g")
+                .data(piedata)
+                .enter()
+                .append("g")
+                .each(function (d) {
+                    var padding = 0.02;
+                    d.starAngle = d.starAngle + padding;
+                    d.endAngle = d.endAngle - padding
+                })
+                .attr("transform", "translate(" + (width / 2) + "," + (width / 2) + ")");
+        arcs.append("path")
+                .attr("fill", function (d, i) {
+                    return color(i)
+                })
+                .attr("d", function (d) {
+                    return arc(d)    //调用弧生成器，得到路径值
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this)
+                            .transition()
+                            .duration(1000)
+                            .ease(d3.easeBounce)
+                            .attr("transform", function (d) {
+                                return "translate(" + arc.centroid(d) + ")";
+                                //这块距离还需要调整
+                            });
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                            .transition()
+                            .duration(1000)
+                            .attr("transform", function (d) {
+                                return "translate(" + [0, 0] + ")";
+                                //centroid返回的是弧形的重心与弧心的相对位置
+                            });
+                })
+        arcs.append("text")
+                .attr("transform", function (d) {
+                    //arc.centroid() 可以获取每一段弧的中心，这个中心是一个相对坐标，相对于圆心
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("text-anchor", "middle")
+                .text(function (d) {
+                    return d.data.city + "[" + d.data.population + "]";
+                })
+                .attr("fill", "#000");
+    }
+    d3_6();
+
+    /////////////////////////////力导向图/////////////////////////////////////
+    function d3_7() {
+        var svg = d3.select("#d3-7")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+        var nodes = [
+            {"id": "red"},
+            {"id": "orange"},
+            {"id": "yellow"},
+            {"id": "green"},
+            {"id": "blue"},
+            {"id": "violet"}
+        ];
+        var links = [
+            {"source": "red", "target": "yellow"},
+            {"source": "red", "target": "blue"},
+            {"source": "red", "target": "green"}
+        ];
+
+        var force = d3.forceSimulation()
+            //创建多体力，并设置力强度
+                .force("charge", d3.forceManyBody().strength(-200))
+                .force("link", d3.forceLink().id(function (d) {
+                    return d.id;
+                }).distance(40))
+                .force("collide", d3.forceCollide(function (d) {
+                    return d.r + 8
+                }).iterations(16))
+            //.force("center", d3.forceCenter(width/2,width/2))
+                .force("x", d3.forceX(width / 2))
+                .force("y", d3.forceY(height / 2))
+
+        force.nodes(nodes)
+                .on("tick", function () {
+                    //可以限定在画布里
+                    //更新坐标
+                    link.attr("x1", function (d) {
+                        return d.source.x;
+                    })
+                            .attr("y1", function (d) {
+                                return d.source.y;
+                            })
+                            .attr("x2", function (d) {
+                                return d.target.x;
+                            })
+                            .attr("y2", function (d) {
+                                return d.target.y;
+                            });
+                    //更新节点坐标
+                    node.attr("cx", function (d) {
+                        return d.x;
+                    })
+                            .attr("cy", function (d) {
+                                return d.y;
+                            });
+
+                    //更新文字坐标
+                    text.attr("x", function (d) {
+                        return d.x;
+                    })
+                            .attr("y", function (d) {
+                                return d.y;
+                            });
+                })
+        force.force("link").links(links)
+
+
+        //添加连线
+        var link = svg.selectAll("line")
+                .data(links)
+                .enter()
+                .append("line")
+                .style("stroke", "#ccc")
+                .style("stroke-width", 1);
+        //添加节点
+        var node = svg.selectAll("circle")
+                .data(nodes)
+                .enter()
+                .append("circle")
+                .attr("r", 10)
+                .style("fill", function (d, i) {
+                    return color(i);
+                })
+                .call(d3.drag()
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended));
+        //节点描述文字
+        var text = svg.selectAll("text")
+                .data(nodes)
+                .enter()
+                .append("text")
+                .style("fill", function (d, i) {
+                    return color(i);
+                })
+                .attr("dx", 20)
+                .attr("dy", 8)
+                .text(function (d) {
+                    return d.id;
+                })
+
+        function dragstarted(d) {
+            if (!d3.event.active) force.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) force.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+    }
+    d3_7();
+
+
+    /////////////////////////////弦图////////////////////////////////////
+    function d3_8() {
+        var city_name = ["北京", "上海", "广州", "深圳"];
+        var matrix = [
+            [1000, 3045, 4567, 1234, 3714],
+            [3214, 2000, 2060, 124, 3234],
+            [8761, 6545, 3000, 8045, 647],
+            [3211, 1067, 3214, 4000, 1006],
+            [2146, 1034, 6745, 4764, 5000]
+        ];
+
+
+        var outerRadius = Math.min(width, height) * 0.5 - 40;
+        var innerRadius = outerRadius - 10;
+        var formatValue = d3.formatPrefix(",.0", 1e3);
+
+        var chord = d3.chord()
+                .padAngle(0.05)
+                .sortSubgroups(d3.descending);
+        var arc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+        var ribbon = d3.ribbon()
+                .radius(innerRadius);
+        var color = d3.scaleOrdinal()
+                .domain(d3.range(4))
+                .range(d3.schemeCategory10);
+        var svg = d3.select("#d3-8")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+        var g = svg.append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+                .datum(chord(matrix));
+
+        var group = g.append("g")
+                .attr("class", "groups")
+                .selectAll("g")
+                .data(function (chords) {
+                    return chords.groups;
+                })
+                .enter().append("g");
+
+        group.append("path")
+                .style("fill", function (d) {
+                    return color(d.index);
+                })
+                .style("stroke", function (d) {
+                    return d3.rgb(color(d.index)).darker();
+                })
+                .attr("d", arc);
+
+        var groupTick = group.selectAll(".group-tick")
+                .data(function (d) {
+                    return groupTicks(d, 1e3);
+                })
+                .enter().append("g")
+                .attr("class", "group-tick")
+                .attr("transform", function (d) {
+                    return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)";
+                });
+
+        groupTick.append("line")
+                .attr("x2", 6);
+
+        groupTick
+                .filter(function (d) {
+                    return d.value % 5e3 === 0;
+                })
+                .append("text")
+                .attr("x", 8)
+                .attr("dy", ".35em")
+                .attr("transform", function (d) {
+                    return d.angle > Math.PI ? "rotate(180) translate(-16)" : null;
+                })
+                .style("text-anchor", function (d) {
+                    return d.angle > Math.PI ? "end" : null;
+                })
+                .text(function (d) {
+                    //return formatValue(d.value);
+                    return d.value;
+                });
+
+        g.append("g")
+                .attr("class", "ribbons")
+                .selectAll("path")
+                .data(function (chords) {
+                    return chords;
+                })
+                .enter()
+                .append("path")
+                .attr("d", ribbon)
+                .style("fill", function (d) {
+                    return color(d.target.index);
+                })
+                .style("stroke", function (d) {
+                    return d3.rgb(color(d.target.index)).darker();
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this)
+                            .style("fill", "yellow");
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                            .transition()
+                            .duration(1000)
+                            .style("fill", color(d.source.index));
+                });
+
+        // Returns an array of tick angles and values for a given group and step.
+        function groupTicks(d, step) {
+            var k = (d.endAngle - d.startAngle) / d.value;
+            return d3.range(0, d.value, step).map(function (value) {
+                return {value: value, angle: value * k + d.startAngle};
+            });
+        }
+    }
+    d3_8();
+
+    /////////////////////////////集群图////////////////////////////////////
+    function d3_9() {
+        var svg = d3.select("#d3-9")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+        var g = svg.append("g")
+                .attr("transform", "translate(60,0)");
+
+        var cluster = d3.cluster()
+                .size([height, width - 160])
+            //设置层间距
+                .separation(function (a, b) {
+                    return (a.parent == b.parent ? 1 : 1);
+                });
+
+        d3.json("city.json", function (error, treeData) {
+            if (error) throw error;
+
+            var root = d3.hierarchy(treeData);
+            cluster(root);
+
+            var link = g.selectAll(".link")
+                    .data(root.descendants().slice(1))
+                    .enter()
+                    .append("path")
+                    .attr("class", "Tree-link")
+                    .attr("d", function (d) {
+                        return "M" + d.y + "," + d.x
+                                + "C" + (d.parent.y + 100) + "," + d.x
+                                + " " + (d.parent.y + 100) + "," + d.parent.x
+                                + " " + d.parent.y + "," + d.parent.x;
+                    });
+
+            var node = g.selectAll(".node")
+                    .data(root.descendants())
+                    .enter()
+                    .append("g")
+                    .attr("class", "Tree-node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.y + "," + d.x + ")";
+                    });
+
+            node.append("circle")
+                    .attr("r", 4.5);
+
+            node.append("text")
+                    .attr("dy", 3)
+                    .attr("x", function (d) {
+                        return d.children ? -8 : 8;
+                    })
+                    .style("text-anchor", function (d) {
+                        return d.children ? "end" : "start";
+                    })
+                    .text(function (d) {
+                        if (d.data.population) {
+                            return d.data.name + "[" + d.data.population + "]";
+                        } else {
+                            return d.data.name
+                        }
+
+                    });
+            var text = node.selectAll("text")
+                    .on("mouseover", focus("limegreen"))
+                    .on("mouseout", focus("orange"))
+
+            function focus(color) {
+                return function (d, i) {
+                    link.filter(function (a) {
+                        return a.source == d;
+                    })
+                            .attr("stroke", color);
+                };
+            }
+
+        });
+    }
+    d3_9();
+
+    /////////////////////////////打包图//////////////////////////////////
+    function d3_10() {
+        var svg = d3.select("#d3-10")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+
+        var g = svg.append("g")
+                .attr("transform", "translate(0,0)");
+
+        var pack = d3.pack()
+                .size([width, height])
+                .padding(2)
+
+        d3.json("city2.json", function (error, data) {
+            //从层次型的数据构造一个根节点
+            var root = d3.hierarchy(data)
+                    .sum(function (d) {
+                        return d.size;
+                    })
+                    //排序所有后代的兄弟节点
+                    .sort(function (a, b) {
+                        return b.value - a.value;
+                    });
+
+            var node = g.selectAll(".node")
+                    //使用包布局排列给定的层次数据生成后代数组
+                    .data(pack(root).descendants())
+                    .enter()
+                    .append("g")
+                    .attr("class", "pack-node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+
+            node.append("circle")
+                    .attr("r", function (d) {
+                        return d.r;
+                    });
+            svg.selectAll("circle")
+                    .on("mouseover",function(d,i){
+                        d3.select(this)
+                                .style("fill","yellow");
+                    })
+                    .on("mouseout",function(d,i){
+                        d3.select(this)
+                                .style("fill","rgb(31, 119, 180)");
+                    });
+
+            node.filter(function (d) {
+                return !d.children;
+            }).append("text")
+                    .attr("dy", "0.5em")
+                    .text(function (d) {
+                        return d.data.name;
+                    });
+        })
+    }
+    d3_10();
+
+    /////////////////////////////中国地图//////////////////////////////////
+    function d3_11() {
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var svg = d3.select("#d3-11")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(0,0)");
+
+        var projection = d3.geoMercator()
+                .center([107, 31])
+                .scale(300)
+                .translate([width / 2, height / 2]);
+
+        var path = d3.geoPath()
+                .projection(projection);
+
+        var url = "china.geojson";
+        d3.json(url, function (error, root) {
+            if (error)
+                return console.error(error);
+            svg.selectAll("path")
+                    .data(root.features)
+                    .enter()
+                    .append("path")
+                    .attr("d", path)
+                    .attr("fill", function (d, i) {
+                        return color(i);
+                    })
+                    .attr("fill-opacity", ".9")
+                    .on("mouseover", function (d, i) {
+                        d3.select(this)
+                                .attr("fill-opacity", "1")
+                                .attr("stroke", "#fff")
+                                .attr("stroke-width", 2)
+                    })
+                    .on("mouseout", function (d, i) {
+                        d3.select(this)
+                                .attr("fill-opacity", ".9")
+                                .attr("stroke", "#fff")
+                                .attr("stroke-width", 0)
+                    });
+            svg.selectAll("text")
+                    .data(root.features)
+                    .enter()
+                    .append("text")
+                    .style("fill", "#000")
+                    .style("font-size", "12px")
+                    .attr("x", function (d, i) {
+                        var ss = path.centroid(d);
+                        return ss[0];
+                    })
+                    .attr("y", function (d, i) {
+                        var ss = path.centroid(d);
+                        return ss[1];
+                    })
+                    .text(function (d) {
+                        return d.properties.name;
+                    })
+                    .attr("transform", "translate(-10,0)")
+
+
+        })
+
+    }
+    d3_11();
+
+    /////////////////////////////可拖动中国地图//////////////////////////////////
+    function d3_12() {
+
+    }
+    d3_12();
+
+    // chord_layout.chord(matrix)
+    // var groups = chord_layout.sortGroups();
+    // var chords = chord_layout.sortChords()
+
+    // console.log(groups)
+    // console.log(chords)
+
+
+    // var w = window,
+    //     d = document,
+    //     e = d.documentElement,
+    //     x = w.innerWidth || e.clientWidth || g.clientWidth,
+    //     y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    // var ss = d3.selectAll("svg")
+    //     .attr("width", x)
+    //     .attr("height", y);
+
+    // function updateWindow(){
+    //     x = w.innerWidth || e.clientWidth || g.clientWidth;
+    //     y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+    //     console.log("width"+x)
+    //     console.log("width"+x)
+    //     ss.attr("width", x)
+    //         .attr("height", y);
+    // }
+    // window.onresize = updateWindow;
+</script>
+</body>
+</html>

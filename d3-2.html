@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基础图表</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+    <link href="src/d3.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">基础图表</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3"></div>
+        </div>
+        <div class="panel-footer">
+            svg基础知识：矩形 &lt;rect&gt;圆形 &lt;circle&gt;椭圆 &lt;ellipse&gt;线 &lt;line&gt;折线 &lt;polyline&gt;多边形 &lt;polygon&gt;路径 &lt;path&gt;
+                <pre>
+                    <code>
+//画布
+var width = 400;
+var height = 120;
+var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+//数据，其中数值在这个demo中代表图形的宽度，后面栗子中会有比例尺
+var data = [250, 210, 170, 130, 90];
+var rectHeight = 25;
+
+//开始绘图
+svg.selectAll("rect")
+    //选择所有的矩形元素绑定数据，插入足够数量的矩形
+    .data(data)
+    .enter()
+    .append("rect")
+
+    //定义每个矩形的xy坐标，其中y值为正的时候，是垂直向下的
+    .attr("x", 0)
+    .attr("y", function (d, i) {
+    return i * rectHeight;
+    })
+
+    //定义矩形的宽度和高度，并填充颜色
+    .attr("width", function (d) {
+    return d;
+    })
+    .attr("height", rectHeight - 2)
+    .attr("fill", "#3498DB")
+
+    //执行过渡效果
+    .transition()
+    .duration(2000)
+    .attr("fill", "#E74C3C")
+                    </code>
+                </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    var width = 400;
+    var height = 120;
+
+    var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    var data = [250, 210, 170, 130, 90];
+    var rectHeight = 25;
+
+    svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", function (d, i) {
+                return i * rectHeight;
+            })
+            .attr("width", function (d) {
+                return d;
+            })
+            .attr("height", rectHeight - 2)
+            .attr("fill", "#3498DB")
+            .transition()
+            .duration(2000)
+            .attr("fill", "#E74C3C")
+</script>
+</body>
+</html>

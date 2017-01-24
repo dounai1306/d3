@@ -1,0 +1,137 @@
+{
+  "name":"中国",
+  "children":
+  [
+    {
+      "name":"浙江" ,
+      "children":
+      [
+        {"name":"杭州" ,"size":3938 },
+        {"name":"宁波" ,"size":3182 },
+        {"name":"温州" ,"size":6714 },
+        {"name":"绍兴" ,"size":743 }
+      ]
+    },
+    {
+      "name":"广西" ,
+      "children":
+      [
+        {"name":"桂林","size":30938 },
+        {"name":"南宁","size":3938 },
+        {"name":"柳州","size":3938 },
+        {"name":"防城港","size":3938 }
+      ]
+    },
+    {
+      "name":"黑龙江",
+      "children":
+      [
+        {"name":"哈尔滨","size":3938 },
+        {"name":"齐齐哈尔","size":3938 },
+        {"name":"牡丹江","size":3938 },
+        {"name":"大庆","size":3938 }
+      ]
+    },
+    {
+      "name":"新疆" ,
+      "children":
+      [
+        {"name":"乌鲁木齐","size":3938 },
+        {"name":"克拉玛依","size":3938 },
+        {"name":"吐鲁番","size":3938 },
+        {"name":"哈密","size":3938 }
+      ]
+    },
+    {
+      "name":"河北" ,
+      "children":
+      [
+        {"name":"石家庄","size":3938 },
+        {"name":"唐山","size":3938 },
+        {"name":"邯郸","size":3938 },
+        {"name":"秦皇岛","size":3938 }
+      ]
+    },
+    {
+      "name":"西藏" ,
+      "children":
+      [
+        {"name":"拉萨","size":3938 },
+        {"name":"昌都","size":3938 },
+        {"name":"林芝","size":3938 }
+      ]
+    },
+    {
+      "name":"江苏" ,
+      "children":
+      [
+        {"name":"南京","size":3938 },
+        {"name":"无锡","size":3938 },
+        {"name":"徐州","size":3938 },
+        {"name":"常州","size":3938 },
+        {"name":"连云港","size":3938 },
+        {"name":"淮安","size":3938 }
+      ]
+    },
+    {
+      "name":"江苏" ,
+      "children":
+      [
+        {"name":"南京","size":3938 },
+        {"name":"无锡","size":3938 },
+        {"name":"徐州","size":3938 },
+        {"name":"常州","size":3938 },
+        {"name":"连云港","size":3938 },
+        {"name":"淮安","size":3938 }
+      ]
+    },
+    {
+      "name":"湖南" ,
+      "children":
+      [
+        {"name":"长沙","size":3938 },
+        {"name":"株洲","size":3938 },
+        {"name":"湘潭","size":3938 },
+        {"name":"衡阳","size":3938 },
+        {"name":"邵阳","size":3938 },
+        {"name":"岳阳","size":3938 }
+      ]
+    },
+    {
+      "name":"海南" ,
+      "children":
+      [
+        {"name":"海口","size":3938 },
+        {"name":"三亚","size":3938 },
+        {"name":"三沙","size":3938 }
+      ]
+    },
+    {
+      "name":"陕西" ,
+      "children":
+      [
+        {"name":"西安","size":3938 },
+        {"name":"咸阳","size":3938 },
+        {"name":"汉中","size":3938 },
+        {"name":"安康","size":3938 },
+        {"name":"榆林","size":3938 },
+        {"name":"延安","size":3938 }
+      ]
+    },
+    {
+      "name":"甘肃" ,
+      "children":
+      [
+        {"name":"兰州","size":3938 },
+        {"name":"酒泉","size":3938 },
+        {"name":"金昌","size":3938 },
+        {"name":"天水","size":3938 },
+        {"name":"嘉峪关","size":3938 },
+        {"name":"武威","size":3938 }
+      ]
+    }
+  ]
+}
+
+
+
