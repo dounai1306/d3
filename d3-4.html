@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>完整柱状图</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+    <link href="src/d3.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">完整柱状图</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3"></div>
+        </div>
+        <div class="panel-footer">
+            <pre>
+            <code>
+var width = 300;
+var height = 300;
+
+var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+//在d3-3.html里，我们是通过range-8来防止轴超出画布
+//在这里，给画布设置一个padding值，通过padding值的使用，使内容不会超出画布
+var padding = {left: 30, right: 30, top: 20, bottom: 20};
+var data = [10, 20, 30, 40, 33, 24, 12, 5];
+
+//创建X轴序数段比例尺
+var xScale = d3.scaleBand()
+                .domain(d3.range(0, data.length))
+                .range([0, width - padding.left - padding.right]);
+
+//创建Y轴定量线性比例尺
+var yScale = d3.scaleLinear()
+                .domain([0, d3.max(data)])
+                .range([height - padding.top - padding.bottom, 0]);
+
+//创建一个底部轴生成器，并设置比例尺
+var xAxis = d3.axisBottom()
+                .scale(xScale);
+
+//创建一个左部轴生成器，并设置比例尺
+var yAxis = d3.axisLeft()
+                .scale(yScale);
+
+//矩形之间的空白
+var rectPadding = 4;
+
+//添加矩形元素
+var rects = svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("fill", "#3498DB")
+                .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+                .attr("x", function (d, i) {
+                    return xScale(i) + rectPadding / 2;
+                })
+                .attr("y", function (d) {
+                    return yScale(d);
+                })
+                //bandwidth获取每段宽度
+                .attr("width", xScale.bandwidth() - rectPadding)
+                .attr("height", function (d) {
+                    return height - padding.top - padding.bottom - yScale(d);
+                })
+                .on("mouseover", function (d, i) {
+                    d3.select(this)
+                            .style("fill", "#E67E22");
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                            .transition()
+                            .duration(500)
+                            .style("fill", "#34495E")
+                });
+
+//添加文字元素
+var texts = svg.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+                .attr("x", function (d, i) {
+                    return xScale(i) + rectPadding / 2;
+                })
+                .attr("y", function (d) {
+                    var min = yScale.domain()[0];
+                    return yScale(min);
+                })
+                .style("fill", "#fff")
+                //设置文本居中
+                .style("text-anchor","middle")
+
+                //开始动画
+                .transition()
+                .delay(function (d, i) {
+                    return i * 200
+                })
+                .duration(2000)
+                //逆弹跳缓动
+                .ease(d3.easeBounce)
+                .attr("y", function (d) {
+                    return yScale(d)
+                })
+                .attr("dx", function () {
+                    return (xScale.bandwidth() - rectPadding) / 2;
+                })
+                .attr("dy", function (d) {
+                    return 20;
+                })
+                .text(function (d) {
+                    return d;
+                });
+
+//添加x轴
+svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")")
+        .call(xAxis);
+
+//添加y轴
+svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+        .call(yAxis);
+
+            </code>
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    var width = 300;
+    var height = 300;
+
+    var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    //在d3-3.html里，我们是通过range-8来防止轴超出画布
+    //在这里，给画布设置一个padding值，通过padding值的使用，使内容不会超出画布
+    var padding = {left: 30, right: 30, top: 20, bottom: 20};
+    var data = [10, 20, 30, 40, 33, 24, 12, 5];
+
+    //创建X轴序数段比例尺
+    var xScale = d3.scaleBand()
+            .domain(d3.range(0, data.length))
+            .range([0, width - padding.left - padding.right]);
+
+    //创建Y轴定量线性比例尺
+    var yScale = d3.scaleLinear()
+            .domain([0, d3.max(data)])
+            .range([height - padding.top - padding.bottom, 0]);
+
+    //创建一个底部轴生成器，并设置比例尺
+    var xAxis = d3.axisBottom()
+            .scale(xScale);
+
+    //创建一个左部轴生成器，并设置比例尺
+    var yAxis = d3.axisLeft()
+            .scale(yScale);
+
+    //矩形之间的空白
+    var rectPadding = 4;
+
+    //添加矩形元素
+    var rects = svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("fill", "#3498DB")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", function (d, i) {
+                return xScale(i) + rectPadding / 2;
+            })
+            .attr("y", function (d) {
+                return yScale(d);
+            })
+            //bandwidth获取每段宽度
+            .attr("width", xScale.bandwidth() - rectPadding)
+            .attr("height", function (d) {
+                return height - padding.top - padding.bottom - yScale(d);
+            })
+            .on("mouseover", function (d, i) {
+                d3.select(this)
+                        .style("fill", "#E67E22");
+            })
+            .on("mouseout", function (d, i) {
+                d3.select(this)
+                        .transition()
+                        .duration(500)
+                        .style("fill", "#34495E")
+            });
+
+    // //添加文字元素
+    var texts = svg.selectAll("text")
+            .data(data)
+            .enter()
+            .append("text")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .attr("x", function (d, i) {
+                return xScale(i) + rectPadding / 2;
+            })
+            .attr("y", function (d) {
+                var min = yScale.domain()[0];
+                return yScale(min);
+            })
+            .style("fill", "#fff")
+            //设置文本居中
+            .style("text-anchor","middle")
+
+            //开始动画
+            .transition()
+            .delay(function (d, i) {
+                return i * 200
+            })
+            .duration(2000)
+            //逆弹跳缓动
+            .ease(d3.easeBounce)
+            .attr("y", function (d) {
+                return yScale(d)
+            })
+            .attr("dx", function () {
+                return (xScale.bandwidth() - rectPadding) / 2;
+            })
+            .attr("dy", function (d) {
+                return 20;
+            })
+            .text(function (d) {
+                return d;
+            });
+
+    //添加x轴
+    svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")")
+            .call(xAxis);
+
+    //添加y轴
+    svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+            .call(yAxis);
+</script>
+</body>
+</html>

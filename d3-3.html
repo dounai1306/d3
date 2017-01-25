@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>坐标轴</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+    <link href="src/d3.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">坐标轴</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3"></div>
+        </div>
+        <div class="panel-footer">
+            <pre>
+            <code>
+var width = 300;
+var height = 150;
+
+//一定要注意range([x,y])不是range(x,y)
+var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+
+var dataset = [25, 21, 17, 13, 2];
+//定义比例尺，定义最小的值和最大的值，因为是横向比例尺，所以range的最大值为svg的宽度
+//这里减8是为了防止底部轴超出画布，具体数值可自行修改
+var linear = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([0, width - 8]);
+
+var rectHeight = 25;
+svg.selectAll("rect")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr("x", 3)
+    .attr("y", function (d, i) {
+        return i * rectHeight
+    })
+    .attr("width", function (d) {
+        //根据比例尺，生成相应的宽度
+        return linear(d)
+    })
+    .attr("height", rectHeight - 2)
+    .attr("fill", "#3498DB");
+
+//定义底部轴生成器，设置比例尺，自定义刻度
+var axis = d3.axisBottom()
+            .scale(linear)
+            .ticks(5);
+
+svg.append("g")
+    .attr("transform", "translate(2,130)")
+    .call(axis);
+            </code>
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    var width = 300;
+    var height = 150;
+
+    var svg = d3.select("#d3")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+
+    var dataset = [25, 21, 17, 13, 2];
+
+    var linear = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([0, width - 8]);
+
+    var rectHeight = 25;
+    svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", 3)
+            .attr("y", function (d, i) {
+                return i * rectHeight
+            })
+            .attr("width", function (d) {
+                return linear(d)
+            })
+            .attr("height", rectHeight - 2)
+            .attr("fill", "#3498DB");
+
+    var axis = d3.axisBottom()
+            .scale(linear)
+            .ticks(5);
+
+    svg.append("g")
+            .attr("transform", "translate(2,130)")
+            .call(axis);
+</script>
+</body>
+</html>
