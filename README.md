@@ -12,3 +12,17 @@ D3的学习成本略高，且相对来说，国内关于D3.v4的中文资料还�
 前者是D3.v3的一个学习资源，尽管v4和v3区别很大，但还是值得一看，顺着v3撸一个v4。
 
 后面的D3 demo都是D3.v4，demo基于http://www.ourd3js.com/
+
+基础部分
+
+1、元素选择和数据绑定：https://dounai1306.github.io/d3/d3-1.html
+2、基础图：https://dounai1306.github.io/d3/d3-2.html
+3、坐标轴：https://dounai1306.github.io/d3/d3-3.html
+4、完整柱状图：https://dounai1306.github.io/d3/d3-4.html
+5、图表过渡：https://dounai1306.github.io/d3/d3-5.html
+6、带图例的饼图：https://dounai1306.github.io/d3/d3-6.html
+7、力导向图：https://dounai1306.github.io/d3/d3-7.html
+8、弦图：https://dounai1306.github.io/d3/d3-8.html
+9、集群图：https://dounai1306.github.io/d3/d3-9.html
+10、打包图：https://dounai1306.github.io/d3/d3-10.html
+11、中国地图：https://dounai1306.github.io/d3/d3-11.html
