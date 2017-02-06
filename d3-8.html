@@ -25,11 +25,11 @@
             <div id="d3"></div>
         </div>
         <div class="panel-footer">
-            <pre>
-            <code>
-
-            </code>
-            </pre>
+            弦图这块和d3.js.html里面绘制的有出入，d3-8.html基于ourd3js的栗子，偏向于简单利于理解
+            <br>
+            d3.js.html里的弦图绘制略复杂有点理解困难
+            <br>
+            整体理解困难点在于<code>chord(population)</code>数据输入
         </div>
     </div>
 </div>
@@ -54,13 +54,13 @@
      **/
 
     //处理数据函数
-    var chord_layout = d3.chord()
+    var chord = d3.chord()
                             //相邻弧之间的夹角
                             .padAngle(0.05)
                             //降序排序
                             .sortSubgroups(d3.descending);
 
-    var groups = chord_layout(population).groups;
+    var groups = chord(population).groups;
 
     //基础部分
     var width = 400;
@@ -122,7 +122,7 @@
     svg.append("g")
             .attr("class", "chord")
             .selectAll("path")
-            .data(chord_layout(population))
+            .data(chord(population))
             .enter()
             .append("path")
             .attr("d", inner_chord)
