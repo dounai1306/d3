@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>打包图</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+    <link href="src/d3.css" rel="stylesheet">
+    <style>
+        .pack-node {
+            stroke-width: 1px;
+        }
+        circle {
+            fill: rgb(31, 119, 180);
+            fill-opacity: .25;
+            stroke: rgb(31, 119, 180);
+            stroke-width: 1px;
+        }
+
+        .leaf circle {
+            fill: #ff7f0e;
+            fill-opacity: 1;
+        }
+
+        text {
+            font: 10px sans-serif;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">打包图</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3"></div>
+        </div>
+        <div class="panel-footer">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var width = 400;
+    var height = 400;
+
+    var svg = d3.select("#d3")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+    var g = svg.append("g")
+                .attr("transform", "translate(0,0)");
+
+    var pack = d3.pack()
+                .size([width, height])
+                .padding(2);
+
+    d3.json("city2.json", function (error, data) {
+        //从层次型的数据构造一个根节点
+        var root = d3.hierarchy(data)
+                        .sum(function (d) {
+                            return d.size;
+                        })
+                        //排序所有后代的兄弟节点
+                        .sort(function (a, b) {
+                            return b.value - a.value;
+                        });
+
+        var node = g.selectAll(".node")
+                    //使用包布局排列给定的层次数据生成后代数组
+                    .data(pack(root).descendants())
+                    .enter()
+                    .append("g")
+                    .attr("class", "pack-node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+
+        node.append("circle")
+            .attr("r", function (d) {
+                return d.r;
+            });
+
+        svg.selectAll("circle")
+            .on("mouseover",function(d,i){
+                d3.select(this)
+                        .style("fill","yellow");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                        .style("fill","rgb(31, 119, 180)");
+            });
+
+        node.filter(function (d) {
+            return !d.children;
+        }).append("text")
+                .attr("dy", "0.5em")
+                .text(function (d) {
+                    return d.data.name;
+                });
+    })
+</script>
+</body>
+</html>
