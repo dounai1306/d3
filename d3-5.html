@@ -75,7 +75,7 @@ circle3.transition()
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height);
-    //添加三个圆，并填充不同的颜色，开始位置为相同
+
     var circle1 = svg.append("circle")
                         .attr("cx", 45)
                         .attr("cy", 45)
@@ -92,15 +92,11 @@ circle3.transition()
                         .attr("r", 45)
                         .style("fill", "#3498DB");
 
-    //给第二个圆添加过渡
-    //默认是以linear进行过渡
     circle2.transition()
             .duration(1500)
             .attr("cx", 200)
             .style("fill", "#2ECC71");
 
-    //给第三个圆添加过渡
-    //执行逆弹跳缓动，在最终弹跳几次
     circle3.transition()
             .duration(2000)
             .ease(d3.easeBounce)

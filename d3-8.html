@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弦图</title>
+    <script src="src/d3.js"></script>
+    <link href="src/bootstrap.min.css" rel="stylesheet">
+    <link href="src/d3.css" rel="stylesheet">
+    <style>
+        .chord path {
+            fill-opacity: 0.5;
+            stroke: #000;
+            stroke-width: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="margin: 15px auto">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">弦图</h3>
+        </div>
+        <div class="panel-body">
+            <div id="d3"></div>
+        </div>
+        <div class="panel-footer">
+            <pre>
+            <code>
+
+            </code>
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    //定义数据部分
+    var city_name = ["北京", "上海", "广州", "深圳", "香港"];
+    var population = [
+        [1000, 5, 4567, 1234, 3714],
+        [3214, 2000, 2060, 124, 3234],
+        [8761, 6545, 3000, 8045, 647],
+        [3211, 1067, 3214, 4000, 1006],
+        [2146, 1034, 6745, 4764, 5000]
+    ];
+    /**
+     北京    上海    广州    深圳    香港
+     北京    1000    5       4567    1234    3714
+     上海    3214    2000    2060    124     3234
+     广州    8761    6545    3000    8045    647
+     深圳    3211    1067    3214    4000    1006
+     香港    2146    1034    6745    4764    5000
+     **/
+
+    //处理数据函数
+    var chord_layout = d3.chord()
+                            //相邻弧之间的夹角
+                            .padAngle(0.05)
+                            //降序排序
+                            .sortSubgroups(d3.descending);
+
+    var groups = chord_layout(population).groups;
+
+    //基础部分
+    var width = 400;
+    var height = 400;
+    var outerRadius = Math.min(width, height) * 0.5 - 40;
+    var innerRadius = outerRadius - 10;
+    var color = d3.scaleOrdinal()
+                    .domain(d3.range(5))
+                    .range(d3.schemeCategory10);
+
+    var svg = d3.select("#d3")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    //绘制节点，有多少个城市画多少个弧线
+    var arc = d3.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+
+    var g_outer = svg.append("g");
+
+    g_outer.selectAll("path")
+            .data(groups)
+            .enter()
+            .append("path")
+            .style("fill", function (d) {
+                return color(d.index);
+            })
+            .style("stroke", function (d) {
+                return color(d.index);
+            })
+            .attr("d", arc);
+
+    g_outer.selectAll("text")
+            .data(groups)
+            .enter()
+            .append("text")
+            .each(function (d, i) {
+                d.angle = (d.startAngle + d.endAngle) / 2;
+                d.name = city_name[i];
+            })
+            .attr("dy", ".35em")
+            .attr("transform", function (d) {
+                return "rotate(" + ( d.angle * 180 / Math.PI ) + ")" +
+                        "translate(0," + -1.0 * (outerRadius + 10) + ")" +
+                        ( ( d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4 ) ? "rotate(180)" : "");
+            })
+            .text(function (d) {
+                return d.name;
+            });
+
+    //内部弦
+    var inner_chord = d3.ribbon()
+                        .radius(innerRadius);
+
+    svg.append("g")
+            .attr("class", "chord")
+            .selectAll("path")
+            .data(chord_layout(population))
+            .enter()
+            .append("path")
+            .attr("d", inner_chord)
+            .style("fill", function (d) {
+                return color(d.source.index);
+            })
+            .style("opacity", 1)
+            .on("mouseover", function (d, i) {
+                d3.select(this)
+                        .style("fill", "yellow");
+            })
+            .on("mouseout", function (d, i) {
+                d3.select(this)
+                        .transition()
+                        .duration(1000)
+                        .style("fill", color(d.source.index));
+            });
+</script>
+</body>
+</html>

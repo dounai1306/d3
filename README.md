@@ -8,7 +8,7 @@ D3的学习成本略高，且相对来说，国内关于D3.v4的中文资料还是蛮少的，不像highcharts\
 
 在工作中，如果highchart可以实现的图表，就不必要去选D3。如果需要定制，那么D3就可以拿来用了。
 
-安利两个学习D3的网站：http://www.ourd3js.com/和https://github.com/tianxuzhang/d3.v4-API-Translation
+安利两个学习D3的网站：http://www.ourd3js.com/  和  https://github.com/tianxuzhang/d3.v4-API-Translation
 前者是D3.v3的一个学习资源，尽管v4和v3区别很大，但还是值得一看，顺着v3撸一个v4。
 
 后面的D3 demo都是D3.v4，demo基于http://www.ourd3js.com/
